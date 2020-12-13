@@ -1,7 +1,5 @@
 # Informatorio 2020 - Proyecto final - Spring Boot
 
----
-
 _Se realizo durante el periodo del 11/12/2020 hasta el ??/12/2020_
 
 ## Autor
