@@ -60,7 +60,7 @@ public class Usuario {
     }
 
     public String getPassword() {
-        return password;
+        return null;
     }
 
     public void setPassword(String password) {
