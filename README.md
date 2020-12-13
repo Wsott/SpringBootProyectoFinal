@@ -6,7 +6,7 @@ _Se realizo durante el periodo del 11/12/2020 hasta el ??/12/2020_
 
 * **Gómez Olivera Emiliano**
 
-### Sobre Postman
+## Sobre Postman
 
 Hay dos archivos para Postman que contienen las mismas consultas, Proyecto Final - Informatorio 2020 (v1) y Proyecto Final - Informatorio 2020 (v2).
 
