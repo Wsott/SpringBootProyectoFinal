@@ -1,5 +1,6 @@
 package com.info.proyectoFinal.controllers;
 
+import com.info.proyectoFinal.holder.PutUsuarioHolder;
 import com.info.proyectoFinal.models.Usuario;
 import com.info.proyectoFinal.repositories.UsuarioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,18 +13,56 @@ import java.time.LocalDate;
 import java.util.LinkedList;
 import java.util.Optional;
 
-
+/**
+ * Controller de la entidad usuario del sistema
+ *
+ * @author Emiliano Gómez Olivera
+ * @Version 1.0
+ */
 @Controller
 @RequestMapping(path="/usuario")
 public class UsuarioController {
     @Autowired
     UsuarioRepository usuarioRepository;
 
+    /**
+    *    Funcion que solicita todos los usuarios de la base de datos
+    *
+    *   Parametros:
+    *       -
+    *   Return:
+    *        Iterable<Usuario> => Un iterable con todos los usuarios almacenados en la base de datos
+    *    URL:
+    *        localhost:8080/usuario/
+    * */
+
     @GetMapping(path = "/")
     public @ResponseBody Iterable<Usuario> getUsuario(){
-        return obtenerUsuarios();
+        return usuarioRepository.findAll();
     }
 
+
+
+    /*
+     *   Funcion que recibe un body con la informacion necesaria para crear un nuevo usuario en la base de datos
+     *
+     *   Parametros:
+     *       @RequestBody Usuario usuario => Json con los datos del usuario
+     *   Return:
+     *       ResponseEntity => Respuesta sobre si la operacion se completo con exito o si se produjo un error.
+     *   URL:
+     *       localhost:8080/usuario/crear
+     *   Body template:
+     *       {
+     *           "nombre": "NOMBRE_DEL_USUARIO",
+     *           "apellido": "APELLIDO_DEL_USUARIO",
+     *           "email": "EMAIL_DEL_USUARIO",
+     *           "password": "PASS_DEL_USUARIO",
+     *           "ciudad": "CIUDAD_DEL_USUARIO",
+     *           "provincia": "PROVINCIA_DEL_USUARIO",
+     *           "pais": "PAIS_DEL_USUARIO"
+     *       }
+     * */
     @PostMapping(path = "/crear")
     public ResponseEntity postUsuario(@RequestBody Usuario usuario){
         try {
@@ -37,26 +76,50 @@ public class UsuarioController {
         }
     }
 
-    @PutMapping(path = "/actualizar/{id}")
-    public ResponseEntity putUsuario(@RequestBody Usuario usuario, @PathVariable int id){
-        Optional<Usuario> resultado = usuarioRepository.findById(id);
+
+
+    /*
+        Recibe un body con la informacion actualizada de un usuario, ademas, recibe como parametro el ID del usuario
+        que tendra las modificaciones
+
+        Parametros:
+            @PathVariable int id => ID del usuario que se va a actualizar
+            @RequestBody Usuario usuario => Json con los datos del usuario
+        Return:
+            ResponseEntity => Respuesta sobre si la operacion se completo con exito o si se produjo un error.
+        URL:
+            localhost:8080/usuario/crear
+        Body template:
+            {
+                "nombre": "NOMBRE_DEL_USUARIO",
+                "apellido": "APELLIDO_DEL_USUARIO",
+                "email": "EMAIL_DEL_USUARIO",
+                "password": "PASS_DEL_USUARIO",
+                "ciudad": "CIUDAD_DEL_USUARIO",
+                "provincia": "PROVINCIA_DEL_USUARIO",
+                "pais": "PAIS_DEL_USUARIO"
+            }
+    */
+    @PutMapping(path = "/actualizar")
+    public ResponseEntity putUsuario(@RequestBody PutUsuarioHolder usuarioHolder){
+        Optional<Usuario> resultado = usuarioRepository.findById(usuarioHolder.getId());
 
         if(!(resultado.isPresent())){
             return ResponseEntity.ok(HttpStatus.NOT_FOUND);
         }
         else{
             LocalDate fechaOriginal = resultado.get().getCreacion();
-            usuario.setId(id);
-            usuario.setCreacion(fechaOriginal);
-            usuarioRepository.save(usuario);
+            usuarioHolder.getUsuario().setId(usuarioHolder.getId());
+            usuarioHolder.getUsuario().setCreacion(fechaOriginal);
+            usuarioRepository.save(usuarioHolder.getUsuario());
 
             return ResponseEntity.ok(HttpStatus.OK);
         }
     }
 
-    @DeleteMapping(path = "/borrar/{id}")
-    public ResponseEntity deleteUsuario(@PathVariable int id){
-        Optional<Usuario> resultado = usuarioRepository.findById(id);
+    @DeleteMapping(path = "/borrar")
+    public ResponseEntity deleteUsuario(@RequestBody PutUsuarioHolder usuarioHolder){
+        Optional<Usuario> resultado = usuarioRepository.findById(usuarioHolder.getId());
 
         if(!(resultado.isPresent())){
             return ResponseEntity.ok(HttpStatus.NOT_FOUND);
@@ -75,7 +138,7 @@ public class UsuarioController {
 
     private LinkedList<Usuario> filtrar(String tipo, String valor){
         LinkedList<Usuario> resultadoFiltrado = new LinkedList<Usuario>();
-        Iterable<Usuario> resultado = obtenerUsuarios();
+        Iterable<Usuario> resultado = usuarioRepository.findAll();
         valor = valor.toLowerCase();
 
         switch (tipo.toLowerCase()) {
@@ -127,6 +190,9 @@ public class UsuarioController {
                     }
                 }
                 break;
+
+            default:
+                return (LinkedList<Usuario>) resultado;
         }
 
         return resultadoFiltrado;

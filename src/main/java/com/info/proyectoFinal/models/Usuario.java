@@ -1,7 +1,15 @@
 package com.info.proyectoFinal.models;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.info.proyectoFinal.controllers.UsuarioController;
+
 import javax.persistence.*;
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 public class Usuario {
@@ -26,6 +34,8 @@ public class Usuario {
     private String provincia;
 
     private String pais;
+
+
 
     public int getId() {
         return id;
@@ -59,9 +69,9 @@ public class Usuario {
         this.email = email;
     }
 
-    public String getPassword() {
+    /*public String getPassword() {
         return null;
-    }
+    }*/
 
     public void setPassword(String password) {
         this.password = password;

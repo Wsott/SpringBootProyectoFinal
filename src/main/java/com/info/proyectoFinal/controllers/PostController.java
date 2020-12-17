@@ -1,5 +1,6 @@
 package com.info.proyectoFinal.controllers;
 
+import com.info.proyectoFinal.holder.PostHolder;
 import com.info.proyectoFinal.models.Post;
 import com.info.proyectoFinal.models.Usuario;
 import com.info.proyectoFinal.repositories.PostRepository;
@@ -28,25 +29,26 @@ public class PostController {
         return postRepository.findAll();
     }
 
-    @PostMapping(path = "/crear/{autor}")
-    public ResponseEntity postPost(@RequestBody Post post, @PathVariable int autor){
-        Optional<Usuario> posibleAutor = usuarioRepository.findById(autor);
+    @PostMapping(path = "/crear")
+    public ResponseEntity postPost(@RequestBody PostHolder postHolder){
+        Optional<Usuario> posibleAutor = usuarioRepository.findById(postHolder.getIdAutor());
 
         if(!(posibleAutor.isPresent())){
             return ResponseEntity.ok(HttpStatus.NOT_FOUND);
         }
         else{
-            post.setAutor(posibleAutor.get());
-            postRepository.save(post);
+            postHolder.getPost().setAutor(posibleAutor.get());
+            postHolder.getPost().setCreacion(LocalDate.now());
+            postRepository.save(postHolder.getPost());
 
             return ResponseEntity.ok(HttpStatus.OK);
         }
     }
 
-    @PutMapping(path = "/actualizar/{autor}/{idPost}")
-    public ResponseEntity putPost(@RequestBody Post post, @PathVariable int autor, @PathVariable int idPost){
-        Optional<Usuario> posibleAutor = usuarioRepository.findById(autor);
-        Optional<Post> posiblePost = postRepository.findById(idPost);
+    @PutMapping(path = "/actualizar")
+    public ResponseEntity putPost(@RequestBody PostHolder postHolder){
+        Optional<Usuario> posibleAutor = usuarioRepository.findById(postHolder.getIdAutor());
+        Optional<Post> posiblePost = postRepository.findById(postHolder.getIdPost());
 
         if(!(posibleAutor.isPresent() && posiblePost.isPresent())){
             return ResponseEntity.ok(HttpStatus.NOT_FOUND);
@@ -54,10 +56,10 @@ public class PostController {
         else{
             if(posiblePost.get().getAutor().equals(posibleAutor.get())){
                 LocalDate fechaOriginal = posiblePost.get().getCreacion();
-                post.setId(idPost);
-                post.setCreacion(fechaOriginal);
-                post.setAutor(posibleAutor.get());
-                postRepository.save(post);
+                postHolder.getPost().setId(postHolder.getIdPost());
+                postHolder.getPost().setCreacion(fechaOriginal);
+                postHolder.getPost().setAutor(posibleAutor.get());
+                postRepository.save(postHolder.getPost());
 
                 return ResponseEntity.ok(HttpStatus.OK);
             }
@@ -67,10 +69,10 @@ public class PostController {
         }
     }
 
-    @DeleteMapping(path = "/borrar/{autor}/{idPost}")
-    public ResponseEntity deletePost(@PathVariable int autor, @PathVariable int idPost){
-        Optional<Usuario> posibleAutor = usuarioRepository.findById(autor);
-        Optional<Post> posiblePost = postRepository.findById(idPost);
+    @DeleteMapping(path = "/borrar")
+    public ResponseEntity deletePost(@RequestBody PostHolder postHolder){
+        Optional<Usuario> posibleAutor = usuarioRepository.findById(postHolder.getIdAutor());
+        Optional<Post> posiblePost = postRepository.findById(postHolder.getIdPost());
 
         if(!(posibleAutor.isPresent() && posiblePost.isPresent())){
             return ResponseEntity.ok(HttpStatus.NOT_FOUND);
