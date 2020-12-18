@@ -1,6 +1,6 @@
 # Informatorio 2020 - Proyecto final - Spring Boot
 
-_Se realizo durante el periodo del 11/12/2020 hasta el ??/12/2020_
+_Se realizo durante el periodo del 11/12/2020 hasta el 18/12/2020_
 
 ## Autor
 
@@ -8,6 +8,9 @@ _Se realizo durante el periodo del 11/12/2020 hasta el ??/12/2020_
 
 ## Sobre Postman
 
-Hay dos archivos para Postman que contienen las mismas consultas, Proyecto Final - Informatorio 2020 (v1) y Proyecto Final - Informatorio 2020 (v2).
+En la raiz del proyecto se encuentra la coleccion exportada de todas las llamadas a la API utilanzo Postman.
+Archivo: (POSTMAN) Informatorio 2020 - Java - Proyecto Final - Gómez Olivera Emiliano.postman_collection
 
-La diferencia esta en la version que se selecciono al momento de exportar los archivos, en la practica la diferencia es nula.
+## Base de datos
+
+Se utilizo MySQL como servidor de base de datos para el proyecto, para ejecutar el proyecto es necesario que en MySQL exista una base de datos llamada informatorio2020java
