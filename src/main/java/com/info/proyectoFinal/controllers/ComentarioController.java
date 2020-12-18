@@ -14,6 +14,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
+import java.util.LinkedList;
 import java.util.Optional;
 
 @Controller
@@ -29,18 +30,62 @@ public class ComentarioController {
     PostRepository postRepository;
 
     @GetMapping(path = "/")
-    public @ResponseBody
-    Iterable<Comentario> getComentario(){
+    public @ResponseBody Iterable<Comentario> getComentario(){
         return comentarioRepository.findAll();
     }
 
+    @GetMapping(path = "/buscar")
+    public @ResponseBody
+    Iterable<Comentario> getComentarioFiltrado(@RequestParam int postId, @RequestParam(required = false) Integer cantidad){
+        Iterable<Comentario> resultadosSinFiltrar = comentarioRepository.findAll();
+
+        if(cantidad == null){
+            LinkedList<Comentario> resultados = new LinkedList<>();
+
+            for (Comentario actual : resultadosSinFiltrar){
+                if (actual.getPostPerteneciente().getId() == postId){
+                    resultados.add(actual);
+                }
+            }
+
+            return resultados;
+        }
+        else{
+            LinkedList<Comentario> lista = new LinkedList<>();
+
+            for (Comentario actual : resultadosSinFiltrar){
+                lista.add(actual);
+            }
+
+            LinkedList<Comentario> resultados = new LinkedList<>();
+
+            int i = 0;
+
+            while(i < lista.size()){
+                if(!(resultados.size() < cantidad)){
+                    break;
+                }
+                else{
+                    if (lista.get(i).getId() == postId){
+                        resultados.add(lista.get(i));
+                    }
+                    i++;
+                }
+            }
+
+            return resultados;
+        }
+    }
+
     @PostMapping(path = "/crear")
-    public ResponseEntity postComentario(@RequestBody ComentarioHolder comentarioHolder){
+    public ResponseEntity<String> postComentario(@RequestBody ComentarioHolder comentarioHolder){
         Optional<Usuario> posibleAutor = usuarioRepository.findById(comentarioHolder.getIdAutor());
         Optional<Post> posiblePost = postRepository.findById(comentarioHolder.getIdPost());
 
         if(!(posibleAutor.isPresent() && posiblePost.isPresent())){
-            return ResponseEntity.ok(HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>(
+                    "NOT FOUND: No se ha encontrado ningun usuario y/o post que coincida con las IDs especificadas.",
+                    HttpStatus.NOT_FOUND);
         }
         else{
             comentarioHolder.getComentario().setAutorComentario(posibleAutor.get());
@@ -49,46 +94,70 @@ public class ComentarioController {
 
             comentarioRepository.save(comentarioHolder.getComentario());
 
-            return ResponseEntity.ok(HttpStatus.OK);
+            return new ResponseEntity<>(
+                    "CREATED: Se ha creado un nuevo comentario.",
+                    HttpStatus.CREATED);
         }
     }
 
     @DeleteMapping(path = "/borrar")
-    public ResponseEntity deleteComentario(@RequestBody ComentarioHolder comentarioHolder){
+    public ResponseEntity<String> deleteComentario(@RequestBody ComentarioHolder comentarioHolder){
         Optional<Usuario> posibleAutor = usuarioRepository.findById(comentarioHolder.getIdAutor());
         Optional<Post> posiblePost = postRepository.findById(comentarioHolder.getIdPost());
         Optional<Comentario> posibleComentario = comentarioRepository.findById(comentarioHolder.getIdComentario());
 
         if(!(posibleAutor.isPresent() && posiblePost.isPresent() && posibleComentario.isPresent())){
-            return ResponseEntity.ok(HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>(
+                    "NOT FOUND: No se ha encontrado ningun usuario y/o post que coincida con las IDs especificadas.",
+                    HttpStatus.NOT_FOUND);
         }
         else{
-            comentarioRepository.delete(posibleComentario.get());
+            if (posibleComentario.get().getAutorComentario().equals(posibleAutor.get())) {
+                comentarioRepository.delete(posibleComentario.get());
 
-            return ResponseEntity.ok(HttpStatus.OK);
+                return new ResponseEntity<>(
+                        "OK: Se ha eliminado el comentario del sistema.",
+                        HttpStatus.OK);
+            }
+            else{
+                return new ResponseEntity<>(
+                        "FORBIDDEN: El usuario no puede borrar el comentario debido a que no es el autor.",
+                        HttpStatus.FORBIDDEN);
+            }
         }
     }
 
     @PutMapping(path = "/actualizar")
-    public ResponseEntity putComentario(@RequestBody ComentarioHolder comentarioHolder){
+    public ResponseEntity<String> putComentario(@RequestBody ComentarioHolder comentarioHolder){
         Optional<Usuario> posibleAutor = usuarioRepository.findById(comentarioHolder.getIdAutor());
         Optional<Post> posiblePost = postRepository.findById(comentarioHolder.getIdPost());
         Optional<Comentario> posibleComentario = comentarioRepository.findById(comentarioHolder.getIdComentario());
 
         if(!(posibleAutor.isPresent() && posiblePost.isPresent() && posibleComentario.isPresent())){
-            return ResponseEntity.ok(HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>(
+                    "NOT FOUND: No se ha encontrado ningun usuario y/o post que coincida con las IDs especificadas.",
+                    HttpStatus.NOT_FOUND);
         }
         else{
-            LocalDate fechaOriginal = posibleComentario.get().getCreacion();
+            if (posibleComentario.get().getAutorComentario().equals(posibleAutor.get())) {
+                LocalDate fechaOriginal = posibleComentario.get().getCreacion();
 
-            comentarioHolder.getComentario().setCreacion(fechaOriginal);
-            comentarioHolder.getComentario().setId(posibleComentario.get().getId());
-            comentarioHolder.getComentario().setAutorComentario(posibleAutor.get());
-            comentarioHolder.getComentario().setPostPerteneciente(posiblePost.get());
+                comentarioHolder.getComentario().setCreacion(fechaOriginal);
+                comentarioHolder.getComentario().setId(posibleComentario.get().getId());
+                comentarioHolder.getComentario().setAutorComentario(posibleAutor.get());
+                comentarioHolder.getComentario().setPostPerteneciente(posiblePost.get());
 
-            comentarioRepository.save(comentarioHolder.getComentario());
+                comentarioRepository.save(comentarioHolder.getComentario());
 
-            return ResponseEntity.ok(HttpStatus.OK);
+                return new ResponseEntity<>(
+                        "OK: Se ha actualizado el comentario.",
+                        HttpStatus.OK);
+            }
+            else{
+                return new ResponseEntity<>(
+                        "FORBIDDEN: El usuario no puede borrar el comentario debido a que no es el autor.",
+                        HttpStatus.FORBIDDEN);
+            }
         }
     }
 }

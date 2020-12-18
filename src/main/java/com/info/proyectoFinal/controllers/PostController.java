@@ -30,28 +30,34 @@ public class PostController {
     }
 
     @PostMapping(path = "/crear")
-    public ResponseEntity postPost(@RequestBody PostHolder postHolder){
+    public ResponseEntity<String> postPost(@RequestBody PostHolder postHolder){
         Optional<Usuario> posibleAutor = usuarioRepository.findById(postHolder.getIdAutor());
 
         if(!(posibleAutor.isPresent())){
-            return ResponseEntity.ok(HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>(
+                    "NOT FOUND: No se ha encontrado ningun usuario que coincida con la ID especificada.",
+                    HttpStatus.NOT_FOUND);
         }
         else{
             postHolder.getPost().setAutor(posibleAutor.get());
             postHolder.getPost().setCreacion(LocalDate.now());
             postRepository.save(postHolder.getPost());
 
-            return ResponseEntity.ok(HttpStatus.OK);
+            return new ResponseEntity<>(
+                    "CREATED: Se ha creado un nuevo post.",
+                    HttpStatus.CREATED);
         }
     }
 
     @PutMapping(path = "/actualizar")
-    public ResponseEntity putPost(@RequestBody PostHolder postHolder){
+    public ResponseEntity<String> putPost(@RequestBody PostHolder postHolder){
         Optional<Usuario> posibleAutor = usuarioRepository.findById(postHolder.getIdAutor());
         Optional<Post> posiblePost = postRepository.findById(postHolder.getIdPost());
 
         if(!(posibleAutor.isPresent() && posiblePost.isPresent())){
-            return ResponseEntity.ok(HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>(
+                    "NOT FOUND: No se ha encontrado ningun post y/o autor que coincida con las IDs especificadas.",
+                    HttpStatus.NOT_FOUND);
         }
         else{
             if(posiblePost.get().getAutor().equals(posibleAutor.get())){
@@ -61,10 +67,14 @@ public class PostController {
                 postHolder.getPost().setAutor(posibleAutor.get());
                 postRepository.save(postHolder.getPost());
 
-                return ResponseEntity.ok(HttpStatus.OK);
+                return new ResponseEntity<>(
+                        "OK: Se ha actualizado la informacion del post.",
+                        HttpStatus.OK);
             }
             else{
-                return ResponseEntity.ok(HttpStatus.FORBIDDEN);
+                return new ResponseEntity<>(
+                        "FORBIDDEN: El usuario no puede modificar el post debido a que no es el autor.",
+                        HttpStatus.FORBIDDEN);
             }
         }
     }
@@ -75,16 +85,22 @@ public class PostController {
         Optional<Post> posiblePost = postRepository.findById(postHolder.getIdPost());
 
         if(!(posibleAutor.isPresent() && posiblePost.isPresent())){
-            return ResponseEntity.ok(HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>(
+                    "NOT FOUND: No se ha encontrado ningun post y/o autor que coincida con las IDs especificadas.",
+                    HttpStatus.NOT_FOUND);
         }
         else{
             if(posiblePost.get().getAutor().equals(posibleAutor.get())){
                 postRepository.delete(posiblePost.get());
 
-                return ResponseEntity.ok(HttpStatus.OK);
+                return new ResponseEntity<>(
+                        "OK: Se ha eliminado el post del sistema.",
+                        HttpStatus.OK);
             }
             else{
-                return ResponseEntity.ok(HttpStatus.FORBIDDEN);
+                return new ResponseEntity<>(
+                        "FORBIDDEN: El usuario no puede borrar el post debido a que no es el autor.",
+                        HttpStatus.FORBIDDEN);
             }
         }
     }

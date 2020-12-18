@@ -13,28 +13,11 @@ import java.time.LocalDate;
 import java.util.LinkedList;
 import java.util.Optional;
 
-/**
- * Controller de la entidad usuario del sistema
- *
- * @author Emiliano Gómez Olivera
- * @Version 1.0
- */
 @Controller
 @RequestMapping(path="/usuario")
 public class UsuarioController {
     @Autowired
     UsuarioRepository usuarioRepository;
-
-    /**
-    *    Funcion que solicita todos los usuarios de la base de datos
-    *
-    *   Parametros:
-    *       -
-    *   Return:
-    *        Iterable<Usuario> => Un iterable con todos los usuarios almacenados en la base de datos
-    *    URL:
-    *        localhost:8080/usuario/
-    * */
 
     @GetMapping(path = "/")
     public @ResponseBody Iterable<Usuario> getUsuario(){
@@ -42,70 +25,32 @@ public class UsuarioController {
     }
 
 
-
-    /*
-     *   Funcion que recibe un body con la informacion necesaria para crear un nuevo usuario en la base de datos
-     *
-     *   Parametros:
-     *       @RequestBody Usuario usuario => Json con los datos del usuario
-     *   Return:
-     *       ResponseEntity => Respuesta sobre si la operacion se completo con exito o si se produjo un error.
-     *   URL:
-     *       localhost:8080/usuario/crear
-     *   Body template:
-     *       {
-     *           "nombre": "NOMBRE_DEL_USUARIO",
-     *           "apellido": "APELLIDO_DEL_USUARIO",
-     *           "email": "EMAIL_DEL_USUARIO",
-     *           "password": "PASS_DEL_USUARIO",
-     *           "ciudad": "CIUDAD_DEL_USUARIO",
-     *           "provincia": "PROVINCIA_DEL_USUARIO",
-     *           "pais": "PAIS_DEL_USUARIO"
-     *       }
-     * */
     @PostMapping(path = "/crear")
-    public ResponseEntity postUsuario(@RequestBody Usuario usuario){
+    public @ResponseBody ResponseEntity<String> postUsuario(@RequestBody Usuario usuario){
         try {
             usuario.setCreacion(LocalDate.now());
             usuarioRepository.save(usuario);
 
-            return ResponseEntity.ok(HttpStatus.OK);
+            return new ResponseEntity<>(
+                    "CREATED: Se ha creado un nuevo usuario.",
+                    HttpStatus.CREATED);
         }
         catch (Exception e){
-            return ResponseEntity.ok(HttpStatus.CONFLICT);
+            return new ResponseEntity<>(
+                    "CONFLICT: Verifique que el email sea unico y que todos los campos esten cargados.",
+                    HttpStatus.CONFLICT);
         }
     }
 
 
-
-    /*
-        Recibe un body con la informacion actualizada de un usuario, ademas, recibe como parametro el ID del usuario
-        que tendra las modificaciones
-
-        Parametros:
-            @PathVariable int id => ID del usuario que se va a actualizar
-            @RequestBody Usuario usuario => Json con los datos del usuario
-        Return:
-            ResponseEntity => Respuesta sobre si la operacion se completo con exito o si se produjo un error.
-        URL:
-            localhost:8080/usuario/crear
-        Body template:
-            {
-                "nombre": "NOMBRE_DEL_USUARIO",
-                "apellido": "APELLIDO_DEL_USUARIO",
-                "email": "EMAIL_DEL_USUARIO",
-                "password": "PASS_DEL_USUARIO",
-                "ciudad": "CIUDAD_DEL_USUARIO",
-                "provincia": "PROVINCIA_DEL_USUARIO",
-                "pais": "PAIS_DEL_USUARIO"
-            }
-    */
     @PutMapping(path = "/actualizar")
-    public ResponseEntity putUsuario(@RequestBody PutUsuarioHolder usuarioHolder){
+    public ResponseEntity<String> putUsuario(@RequestBody PutUsuarioHolder usuarioHolder){
         Optional<Usuario> resultado = usuarioRepository.findById(usuarioHolder.getId());
 
         if(!(resultado.isPresent())){
-            return ResponseEntity.ok(HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>(
+                    "NOT FOUND: No se ha encontrado ningun usuario que coincida con la ID especificada.",
+                    HttpStatus.NOT_FOUND);
         }
         else{
             LocalDate fechaOriginal = resultado.get().getCreacion();
@@ -113,21 +58,27 @@ public class UsuarioController {
             usuarioHolder.getUsuario().setCreacion(fechaOriginal);
             usuarioRepository.save(usuarioHolder.getUsuario());
 
-            return ResponseEntity.ok(HttpStatus.OK);
+            return new ResponseEntity<>(
+                    "OK: Se ha actualizado la informacion del usuario.",
+                    HttpStatus.OK);
         }
     }
 
     @DeleteMapping(path = "/borrar")
-    public ResponseEntity deleteUsuario(@RequestBody PutUsuarioHolder usuarioHolder){
+    public ResponseEntity<String> deleteUsuario(@RequestBody PutUsuarioHolder usuarioHolder){
         Optional<Usuario> resultado = usuarioRepository.findById(usuarioHolder.getId());
 
         if(!(resultado.isPresent())){
-            return ResponseEntity.ok(HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>(
+                    "NOT FOUND: No se ha encontrado ningun usuario que coincida con la ID especificada.",
+                    HttpStatus.NOT_FOUND);
         }
         else{
             usuarioRepository.delete(resultado.get());
 
-            return ResponseEntity.ok(HttpStatus.OK);
+            return new ResponseEntity<>(
+                    "OK: Se ha eliminado al usuario del sistema.",
+                    HttpStatus.OK);
         }
     }
 
@@ -192,19 +143,14 @@ public class UsuarioController {
                 break;
 
             default:
-                return (LinkedList<Usuario>) resultado;
+                LinkedList<Usuario> lista = new LinkedList<>();
+
+                for (Usuario actual : resultado){
+                    lista.add(actual);
+                }
+                return lista;
         }
 
         return resultadoFiltrado;
-    }
-
-    private Iterable<Usuario> obtenerUsuarios(){
-        Iterable<Usuario> lista = usuarioRepository.findAll();
-
-        for (Usuario actual : lista){
-            actual.setPassword(null);
-        }
-
-        return lista;
     }
 }
