@@ -1,0 +1,455 @@
+{
+	"info": {
+		"_postman_id": "fe81d70a-d999-4de8-add9-82779023a497",
+		"name": "Informatorio 2020 - Java - Proyecto Final - Gómez Olivera Emiliano",
+		"description": "Informatorio 2020\r\n- - -\r\nProyecto en Java utiliznado Spring Boot.\r\nDentro de esta coleccion estan todas las llamadas a la API.\r\n- - -\r\nHecho por Gómez Olivera Emiliano",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Request para Usuario",
+			"item": [
+				{
+					"name": "[POST] Crear usuario",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n\t\"nombre\": \"Nombre\",\r\n\t\"apellido\": \"Apellido\",\r\n\t\"email\": \"Email\",\r\n\t\"password\": \"Password\",\r\n\t\"ciudad\": \"Ciudad\",\r\n\t\"provincia\": \"Provincia\",\r\n\t\"pais\": \"Pais\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:8080/usuario/crear",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"usuario",
+								"crear"
+							]
+						},
+						"description": "Request para crear un usuario en el sistema\r\n\r\nBody template:\r\n{\r\n\t\"nombre\": \"Nombre\",\r\n\t\"apellido\": \"Apellido\",\r\n\t\"email\": \"Email\",\r\n\t\"password\": \"Password\",\r\n\t\"ciudad\": \"Ciudad\",\r\n\t\"provincia\": \"Provincia\",\r\n\t\"pais\": \"Pais\"\r\n}"
+					},
+					"response": []
+				},
+				{
+					"name": "[DELETE] Borrar usuarios",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"id\": -1\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:8080/usuario/borrar",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"usuario",
+								"borrar"
+							]
+						},
+						"description": "Request que borra un usuario a partir de la ID que se le pasa por el body.\r\n\r\nBody template:\r\n{\r\n    \"id\": -1 /* ID del usuario que se borrara */\r\n}"
+					},
+					"response": []
+				},
+				{
+					"name": "[PUT] Actualizar",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n\t\"id\": -1,\r\n\t\"usuario\":\t{\r\n\t\t\t\t\t\"nombre\": \"NuevoNombre\",\r\n\t\t\t\t\t\"apellido\": \"NuevoApellido\",\r\n\t\t\t\t\t\"email\": \"NuevoEmail\",\r\n\t\t\t\t\t\"password\": \"NuevaPassword\",\r\n\t\t\t\t\t\"ciudad\": \"NuevaCiudad\",\r\n\t\t\t\t\t\"provincia\": \"NuevaProvincia\",\r\n\t\t\t\t\t\"pais\": \"NuevoPais\"\r\n\t\t\t\t}\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:8080/usuario/actualizar",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"usuario",
+								"actualizar"
+							]
+						},
+						"description": "Request que actualiza la informacion del usuario del sistema, todos los datos necesarios se envian por le body. Requiere de la ID de usuario que se modificara y un objeto del tipo usuario con los datos modificados.\r\n\r\nTemplate del body:\r\n{\r\n\t\"id\": -1 /*ID del usuario a modificar*/,\r\n\t\"usuario\":\t{\r\n\t\t\t\t\t\"nombre\": \"NuevoNombre\",\r\n\t\t\t\t\t\"apellido\": \"NuevoApellido\",\r\n\t\t\t\t\t\"email\": \"NuevoEmail\",\r\n\t\t\t\t\t\"password\": \"NuevaPassword\",\r\n\t\t\t\t\t\"ciudad\": \"NuevaCiudad\",\r\n\t\t\t\t\t\"provincia\": \"NuevaProvincia\",\r\n\t\t\t\t\t\"pais\": \"NuevoPais\"\r\n\t\t\t\t}\r\n}"
+					},
+					"response": []
+				},
+				{
+					"name": "[GET] Obtener usuarios",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:8080/usuario/",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"usuario",
+								""
+							]
+						},
+						"description": "Request que devuelve todos los usuarios del sistema"
+					},
+					"response": []
+				},
+				{
+					"name": "[GET] Filtrar usuarios",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:8080/usuario/filtrar?tipo=creacion&valor=2020-12-16",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"usuario",
+								"filtrar"
+							],
+							"query": [
+								{
+									"key": "tipo",
+									"value": "creacion"
+								},
+								{
+									"key": "valor",
+									"value": "2020-12-16"
+								}
+							]
+						},
+						"description": "Filtra los usuarios utilizando un campo y un valor que se proporcina por la URL. Devuelve todos los usuarios en caso de que se provea un campo invalido.\r\n\r\nNota: cuando se filtra por la fecha de creacion, considere que devuelve todos los usuarios creados a partir del dia siguiente de la fecha especificada. Ejemplo: 2020-12-17 => Devuelve los usuarios cuya fecha de creacion sea el 2020-12-18 o mas reciente.\r\n\r\nParametros de la URL: tipo, valor\r\n\r\nFiltros:\r\n- nombre\r\n- apellido\r\n- ciudad\r\n- provincia\r\n- pais\r\n- creacion"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Request para Post",
+			"item": [
+				{
+					"name": "[POST] Crear un post",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"idAutor\": -1,\r\n    \"post\": {\r\n                \"titulo\": \"TITULO\",\r\n                \"descripcion\": \"DESCRIPCION\",\r\n                \"cuerpo\": \"CUERPO\",\r\n                \"publicado\": false\r\n            }\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:8080/post/crear",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"post",
+								"crear"
+							]
+						},
+						"description": "Request para crear un nuevo post y asociarlo a un usuasrio del sistema.\r\n\r\nBody template:\r\n{\r\n    \"autor\": -1 /* Id del autor del post */,\r\n    \"post\": {\r\n                \"titulo\": \"TITULO\",\r\n                \"descripcion\": \"DESCRIPCION\",\r\n                \"cuerpo\": \"CUERPO\",\r\n                \"publicado\": false\r\n            }\r\n}"
+					},
+					"response": []
+				},
+				{
+					"name": "[DELETE] Borrar post",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"idAutor\": -1,\r\n    \"idPost\": -1\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:8080/post/borrar",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"post",
+								"borrar"
+							]
+						},
+						"description": "Request que borra el post segun los datos que se le pasa por el body, requiere del ID del autor y del ID del post para identificar cual elemento borrar.\r\n\r\nBody template:\r\n{\r\n    \"idAutor\": -1,\r\n    \"idPost\": -1\r\n}"
+					},
+					"response": []
+				},
+				{
+					"name": "[PUT] Actualizar post",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"idAutor\": -1,\r\n    \"idPost\": -1,\r\n    \"post\": {\r\n                \"titulo\": \"TITULO\",\r\n                \"descripcion\": \"DESCRIPCION.\",\r\n                \"cuerpo\": \"CUERPO\",\r\n                \"publicado\": false\r\n            }\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:8080/post/actualizar",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"post",
+								"actualizar"
+							]
+						},
+						"description": "Request que actualiza el post en base a los nuevos datos que se le pasa por el body, ademas requiere del ID del autor y del post original.\r\n\r\nBody template:\r\n{\r\n    \"autor\": -1 /* Id del autor del post */,\r\n    \"idPost\": -1 /* Id del post que se quiere modificar */,\r\n    \"post\": {\r\n                \"titulo\": \"TITULO\",\r\n                \"descripcion\": \"DESCRIPCION.\",\r\n                \"cuerpo\": \"CUERPO\",\r\n                \"publicado\": false\r\n            }\r\n}"
+					},
+					"response": []
+				},
+				{
+					"name": "[GET] Obtener post",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:8080/post/",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"post",
+								""
+							]
+						},
+						"description": "Request que trae todos los post del sistema"
+					},
+					"response": []
+				},
+				{
+					"name": "[GET] Filtrar post segun una palabra pasada por la URL",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:8080/post/buscar/ejemplo",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"post",
+								"buscar",
+								"ejemplo"
+							]
+						},
+						"description": "Request que filtra los post segun una palabra especificada en la URL.\r\n\r\nEjemplo:\r\nPara la URL (localhost:8080/post/buscar/ejemplo) se buscaran todos los posts que tenga la palabra \"ejemplo\" en el titulo\r\n\r\nURL template:\r\nlocalhost:8080/post/buscar/[PALABRA CON LA QUE FILTRAR]\r\n"
+					},
+					"response": []
+				},
+				{
+					"name": "[GET] Obtener todos los posts publicados",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:8080/post/publicados?estado=1",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"post",
+								"publicados"
+							],
+							"query": [
+								{
+									"key": "estado",
+									"value": "1"
+								}
+							]
+						},
+						"description": "Request que devuelve todos los post que se encuentren publicados, utiliza un parametro llamado \"estado\" que puede tomar dos valores (1: publicado y 0: no publicado)"
+					},
+					"response": []
+				}
+			],
+			"description": "Request para las operaciones de los Post del sistema"
+		},
+		{
+			"name": "Request para Comentario",
+			"item": [
+				{
+					"name": "[POST] Crear un comentario",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"idPost\": -1,\r\n    \"idAutor\": -1,\r\n    \"comentario\":   {\r\n                        \"comentario\": \"COMENTARIO\"\r\n                    }\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:8080/comentario/crear",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"comentario",
+								"crear"
+							]
+						},
+						"description": "Request para crear un nuevo comentario en el sistema que se relaciona con un Usuario y un Post, se le pasa por el body el ID del usuario, el ID del post y el comentario que se realizara.\r\n\r\nBody template:\r\n{\r\n    \"idPost\": -1,\r\n    \"idAutor\": -1,\r\n    \"comentario\":   {\r\n                        \"comentario\": \"COMENTARIO\"\r\n                    }\r\n}"
+					},
+					"response": []
+				},
+				{
+					"name": "[GET] Obtener comentarios de un post y determinar la cantidad (Opcional)",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:8080/comentario/buscar?postId=1&cantidad=1",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"comentario",
+								"buscar"
+							],
+							"query": [
+								{
+									"key": "postId",
+									"value": "1"
+								},
+								{
+									"key": "cantidad",
+									"value": "1"
+								}
+							]
+						},
+						"description": "Request para obtener todos los comentarios de un post, se puede determinar la cantidad de comentarios que devolver y, si no se le especifica nada, trae todos los comentarios del post.\r\n\r\nURL template:\r\nlocalhost:8080/comentario/buscar?postId=[ID DEL POST] => Trae todos los comentarios de un post.\r\n\r\nlocalhost:8080/comentario/buscar?postId=[ID DEL POST]&cantidad=[CANTIDAD DE COMENTARIOS] => Trae cierta cantidad de comentarios de un post"
+					},
+					"response": []
+				},
+				{
+					"name": "[GET] Obtener todos los comentarios",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:8080/comentario/",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"comentario",
+								""
+							]
+						},
+						"description": "Request que devuelve todos los comentarios almacenados en el sistema"
+					},
+					"response": []
+				},
+				{
+					"name": "[DELETE] Borrar comentario",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"idPost\": -1,\r\n    \"idAutor\": -1,\r\n    \"idComentario\": -1\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:8080/comentario/borrar",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"comentario",
+								"borrar"
+							]
+						},
+						"description": "Request que borra un comentario del sistema, requiere que le pasen por el body el ID del usuario que creo el comentario, el ID del post relacionado y el ID del comentario que se borrara.\r\n\r\nBody Template:\r\n{\r\n    \"idPost\": -1,\r\n    \"idAutor\": -1,\r\n    \"idComentario\": -1\r\n}"
+					},
+					"response": []
+				},
+				{
+					"name": "[PUT] Actualizar comentario",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"idPost\": -1,\r\n    \"idAutor\": -1,\r\n    \"idComentario\": -1,\r\n    \"comentario\":   {\r\n                        \"comentario\": \"NUEVO COMENTARIO\"\r\n                    }\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:8080/comentario/actualizar",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"comentario",
+								"actualizar"
+							]
+						},
+						"description": "Request para actualizar el comentario, requiere que se le pase por el body el ID del comentario, el ID del usuario que hizo el comentario, el ID del post al que pertenece y el comentario nuevo.\r\n\r\nBody template:\r\n{\r\n    \"idPost\": -1,\r\n    \"idAutor\": -1,\r\n    \"idComentario\": -1,\r\n    \"comentario\":   {\r\n                        \"comentario\": \"NUEVO COMENTARIO\"\r\n                    }\r\n}"
+					},
+					"response": []
+				}
+			],
+			"description": "Todos los request de la entidad Comentario"
+		}
+	]
+}

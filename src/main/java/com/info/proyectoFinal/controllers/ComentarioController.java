@@ -66,7 +66,7 @@ public class ComentarioController {
                     break;
                 }
                 else{
-                    if (lista.get(i).getId() == postId){
+                    if (lista.get(i).getPostPerteneciente().getId() == postId){
                         resultados.add(lista.get(i));
                     }
                     i++;
@@ -155,7 +155,7 @@ public class ComentarioController {
             }
             else{
                 return new ResponseEntity<>(
-                        "FORBIDDEN: El usuario no puede borrar el comentario debido a que no es el autor.",
+                        "FORBIDDEN: El usuario no puede actualizar el comentario debido a que no es el autor.",
                         HttpStatus.FORBIDDEN);
             }
         }
