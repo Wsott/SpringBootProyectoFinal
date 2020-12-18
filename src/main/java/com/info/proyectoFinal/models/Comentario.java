@@ -19,6 +19,10 @@ public class Comentario {
     @Column(length = 200)
     private String comentario;
 
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "fk_perteneceAPost")
+    private Post postPerteneciente;
+
 
 
     public int getId() {
@@ -51,5 +55,13 @@ public class Comentario {
 
     public void setComentario(String comentario) {
         this.comentario = comentario;
+    }
+
+    public Post getPostPerteneciente() {
+        return postPerteneciente;
+    }
+
+    public void setPostPerteneciente(Post postPerteneciente) {
+        this.postPerteneciente = postPerteneciente;
     }
 }
